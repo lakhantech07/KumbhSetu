@@ -1,0 +1,6 @@
+{
+  "name": "kumbhsetu",
+  "description": "KumbhSetu - Fair Price & Verified Services Directory for Food, Lodging & Transport with Binary Search Tree and 50% price guardrails.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

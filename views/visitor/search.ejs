@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kumbhsetu - Visitor Search</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fff8f0; color: #1f2937; margin: 0; padding: 24px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { color: #c2410c; margin-bottom: 8px; }
+    .search-box { display: flex; gap: 8px; margin-bottom: 24px; }
+    .search-input { flex: 1; padding: 14px 18px; font-size: 16px; border: 2px solid #fdba74; border-radius: 8px; outline: none; }
+    .search-btn { background: #ea580c; color: white; border: none; padding: 14px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .guardrail-banner { background: #ffedd5; border-left: 4px solid #ea580c; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; color: #9a3412; }
+    .card { background: white; border-radius: 10px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #fed7aa; }
+    .badge { display: inline-block; background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 9999px; }
+    .prices { display: flex; gap: 24px; margin: 12px 0; background: #f9fafb; padding: 12px; border-radius: 8px; }
+    .genuine { color: #047857; font-weight: bold; }
+    .max-price { color: #c2410c; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="/kumbhsetu-logo.svg" alt="kumbhsetu Logo" style="width: 80px; height: 80px; margin-bottom: 8px;">
+      <h1>kumbhsetu - Verified Fair-Price Services</h1>
+      <p>Search verified food, lodging, and transport services across Nashik & Panchavati sectors.</p>
+    </div>
+
+    <form class="search-box" action="/search" method="GET">
+      <input 
+        class="search-input" 
+        type="text" 
+        name="item" 
+        placeholder="Search item, e.g. Vada Pav" 
+        value="<%= query || '' %>"
+      />
+      <button class="search-btn" type="submit">Search</button>
+    </form>
+
+    <div class="guardrail-banner">
+      <strong>Price guardrail: up to 50% above the genuine price.</strong>
+      <p style="margin: 4px 0 0 0; font-size: 12px;">All displayed stores are verified by the Kumbh Mela Administration. Overpricing beyond the maximum permitted price is strictly prohibited.</p>
+    </div>
+
+    <div class="results-list">
+      <% if (results && results.length > 0) { %>
+        <p style="color: #6b7280; font-size: 14px;">Found <%= results.length %> verified store(s) matching "<%= query %>" (sorted by lowest price, then store name):</p>
+        <% results.forEach(function(shop) { %>
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="margin: 0; color: #111827;"><%= shop.shopName %></h3>
+              <span class="badge">Verified Store</span>
+            </div>
+            <p style="margin: 6px 0; color: #4b5563;">
+              <strong>Item:</strong> <span style="color: #ea580c; font-weight: 600;"><%= shop.item %></span> | 
+              <strong>Area:</strong> <%= shop.area %>
+            </p>
+            <p style="margin: 4px 0; font-size: 13px; color: #6b7280;">
+              <strong>Address:</strong> <%= shop.address %>
+            </p>
+            <div class="prices">
+              <div>
+                <span style="font-size: 12px; color: #6b7280;">Genuine Reference Price</span>
+                <div class="genuine">₹<%= shop.price %> <span style="font-size: 12px; font-weight: normal; color: #6b7280;"><%= shop.unit %></span></div>
+              </div>
+              <div>
+                <span style="font-size: 12px; color: #6b7280;">Maximum Permitted Price</span>
+                <div class="max-price">₹<%= shop.max_price %> <span style="font-size: 12px; font-weight: normal; color: #6b7280;"><%= shop.unit %></span></div>
+              </div>
+            </div>
+            <small style="color: #9a3412;">
+              <em>* Price guardrail: up to 50% above the genuine price.</em>
+            </small>
+          </div>
+        <% }); %>
+      <% } else if (query) { %>
+        <div class="card" style="text-align: center; color: #6b7280;">
+          <p>No verified stores found for "<strong><%= query %></strong>".</p>
+          <small>Try searching "Vada Pav", "Samosa", or "Chai".</small>
+        </div>
+      <% } else { %>
+        <div class="card" style="text-align: center; color: #6b7280;">
+          <p>Enter an item name above to search verified Kumbh Mela stores.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
